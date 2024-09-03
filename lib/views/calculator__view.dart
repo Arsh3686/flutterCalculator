@@ -1,18 +1,5 @@
 import 'package:flutter/material.dart';
-
-// class CalculatorHomePage extends StatefulWidget {
-//   const CalculatorHomePage({super.key, this.hint = "Enter a number"});
-//   final String? hint;
-//   @override
-//   State<CalculatorHomePage> createState() => _CalculatorHomePageState();
-// }
-
-// class _CalculatorHomePageState extends State<CalculatorHomePage> {
-//   @override
-//   Widget build(BuildContext context) {
-//     return
-//   }
-// }
+import 'package:flutter/services.dart';
 
 class CalculatorHomePage extends StatefulWidget {
   const CalculatorHomePage({super.key});
@@ -24,7 +11,7 @@ class CalculatorHomePage extends StatefulWidget {
 class _CalculatorHomePageState extends State<CalculatorHomePage> {
   int x = 0;
   int y = 0;
-  num z = 0;
+  dynamic z = 0;
 
   @override
   void initState() {
@@ -48,7 +35,14 @@ class _CalculatorHomePageState extends State<CalculatorHomePage> {
               hint: "Enter second Number", controller: inputTwoController),
           Text(
             z.toString(),
-            style: const TextStyle(fontSize: 40, fontWeight: FontWeight.bold),
+            style: TextStyle(
+                color: (z.runtimeType == String
+                    ? Colors.red
+                    : z > 0
+                        ? Colors.green
+                        : Colors.black),
+                fontSize: 40,
+                fontWeight: FontWeight.bold),
           ),
           const Spacer(),
           Row(
@@ -57,8 +51,15 @@ class _CalculatorHomePageState extends State<CalculatorHomePage> {
               FloatingActionButton(
                 onPressed: () {
                   setState(() {
-                    z = num.tryParse(inputOneController.text)! +
-                        num.tryParse(inputTwoController.text)!;
+                    if (num.tryParse(inputOneController.text) == null ||
+                        num.tryParse(inputTwoController.text) == null) {
+                      setState(() {
+                        z = "Input field can't be empty";
+                      });
+                    } else {
+                      z = num.tryParse(inputOneController.text)! +
+                          num.tryParse(inputTwoController.text)!;
+                    }
                   });
                 },
                 child: const Icon(Icons.add),
@@ -66,8 +67,15 @@ class _CalculatorHomePageState extends State<CalculatorHomePage> {
               FloatingActionButton(
                 onPressed: () {
                   setState(() {
-                    z = num.tryParse(inputOneController.text)! -
-                        num.tryParse(inputTwoController.text)!;
+                    if (num.tryParse(inputOneController.text) == null ||
+                        num.tryParse(inputTwoController.text) == null) {
+                      setState(() {
+                        z = "Input field can't be empty";
+                      });
+                    } else {
+                      z = num.tryParse(inputOneController.text)! -
+                          num.tryParse(inputTwoController.text)!;
+                    }
                   });
                 },
                 child: const Icon(Icons.remove),
@@ -75,8 +83,15 @@ class _CalculatorHomePageState extends State<CalculatorHomePage> {
               FloatingActionButton(
                 onPressed: () {
                   setState(() {
-                    z = num.tryParse(inputOneController.text)! *
-                        num.tryParse(inputTwoController.text)!;
+                    if (num.tryParse(inputOneController.text) == null ||
+                        num.tryParse(inputTwoController.text) == null) {
+                      setState(() {
+                        z = "Input field can't be empty";
+                      });
+                    } else {
+                      z = num.tryParse(inputOneController.text)! *
+                          num.tryParse(inputTwoController.text)!;
+                    }
                   });
                 },
                 child: const Icon(Icons.star),
@@ -84,8 +99,15 @@ class _CalculatorHomePageState extends State<CalculatorHomePage> {
               FloatingActionButton(
                 onPressed: () {
                   setState(() {
-                    z = num.tryParse(inputOneController.text)! /
-                        num.tryParse(inputTwoController.text)!;
+                    if (num.tryParse(inputOneController.text) == null ||
+                        num.tryParse(inputTwoController.text) == null) {
+                      setState(() {
+                        z = "Input field can't be empty";
+                      });
+                    } else {
+                      z = num.tryParse(inputOneController.text)! /
+                          num.tryParse(inputTwoController.text)!;
+                    }
                   });
                 },
                 child: const Icon(Icons.forward),
@@ -122,6 +144,11 @@ class CalculatorDisplay extends StatelessWidget {
   Widget build(BuildContext context) {
     return TextField(
       controller: controller,
+      keyboardType: TextInputType.number,
+      inputFormatters: <TextInputFormatter>[
+        FilteringTextInputFormatter
+            .digitsOnly, // Restricts input to digits only
+      ],
       decoration: InputDecoration(
         hintText: hint,
         border: OutlineInputBorder(
